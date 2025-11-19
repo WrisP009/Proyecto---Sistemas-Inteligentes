@@ -1,0 +1,18 @@
+{
+    "facturas_ok": 4,
+    "facturas_con_revision": 4,
+    "facturas_error": 0,
+    "ids_facturas_ok": [
+        "00aa4142-1e2a-4bbd-9cdc-3f964cd94607",
+        "00d2b04b-1f1f-40a8-9056-c682e8174c57",
+        "00e8c691-f77f-4cb6-b9b1-87e3261346f2",
+        "0a6af69b-41d3-4f5d-a345-54c036f03fba"
+    ],
+    "ids_facturas_con_revision": [
+        "00c35964-3ea9-45f8-85bf-6bbc0290441a",
+        "00c4fcba-f0f4-4de1-9755-2f3997f00040",
+        "0a4b62e3-08b6-4377-82c1-1ebd8ca51905",
+        "0a8dc65e-6072-4d54-88b2-6fa36811d23b"
+    ],
+    "ids_facturas_error": []
+}
