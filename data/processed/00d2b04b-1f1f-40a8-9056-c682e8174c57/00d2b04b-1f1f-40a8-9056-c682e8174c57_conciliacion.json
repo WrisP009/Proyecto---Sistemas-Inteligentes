@@ -1,0 +1,93 @@
+{
+    "id_factura": "00d2b04b-1f1f-40a8-9056-c682e8174c57",
+    "pdf_raw": {
+        "cufe": "331e70ea30705b8234b54733ae072a7f5d222794b0b538e7d443cc31f495ab1c10f354d28398d525f423d2448cd7f517",
+        "numero": null,
+        "nit_emisor": "890905893",
+        "nombre_emisor": null,
+        "fecha_emision": "2025-03-05",
+        "fecha_vencimiento": null,
+        "subtotal": "168500.00",
+        "impuestos": "32015.00",
+        "total": null,
+        "items": []
+    },
+    "xml_raw": {
+        "cufe": "331e70ea30705b8234b54733ae072a7f5d222794b0b538e7d443cc31f495ab1c10f354d28398d525f423d2448cd7f517",
+        "numero": "178",
+        "parent_document_id": "FEV10719",
+        "nit_emisor": "900311609",
+        "fecha_emision": "2025-03-05",
+        "subtotal": "168500.00",
+        "impuestos": "32015.00",
+        "total": "200515.00"
+    },
+    "conciliacion": {
+        "cufe": {
+            "valor_pdf_normalizado": "331e70ea30705b8234b54733ae072a7f5d222794b0b538e7d443cc31f495ab1c10f354d28398d525f423d2448cd7f517",
+            "valor_xml_normalizado": "331e70ea30705b8234b54733ae072a7f5d222794b0b538e7d443cc31f495ab1c10f354d28398d525f423d2448cd7f517",
+            "valor_resuelto": "331e70ea30705b8234b54733ae072a7f5d222794b0b538e7d443cc31f495ab1c10f354d28398d525f423d2448cd7f517",
+            "fuente_elegida": "iguales",
+            "requiere_revision": false,
+            "razon_ia": "Ambas fuentes coinciden tras normalizar."
+        },
+        "numero": {
+            "valor_pdf_normalizado": null,
+            "valor_xml_normalizado": "178",
+            "valor_resuelto": "178",
+            "fuente_elegida": "xml",
+            "requiere_revision": false,
+            "razon_ia": "Regla de prioridad: se elige XML para el campo numero."
+        },
+        "nit_emisor": {
+            "valor_pdf_normalizado": "890905893",
+            "valor_xml_normalizado": "900311609",
+            "valor_resuelto": "900311609",
+            "fuente_elegida": "xml",
+            "requiere_revision": false,
+            "razon_ia": "Regla de prioridad: se elige XML para el campo nit_emisor."
+        },
+        "fecha_emision": {
+            "valor_pdf_normalizado": "2025-03-05",
+            "valor_xml_normalizado": "2025-03-05",
+            "valor_resuelto": "2025-03-05",
+            "fuente_elegida": "iguales",
+            "requiere_revision": false,
+            "razon_ia": "Ambas fuentes coinciden tras normalizar."
+        },
+        "fecha_vencimiento": {
+            "valor_pdf_normalizado": null,
+            "valor_xml_normalizado": null,
+            "valor_resuelto": null,
+            "fuente_elegida": "indefinido",
+            "requiere_revision": false,
+            "razon_ia": "La fecha de vencimiento es informativa y no se utiliza como criterio para marcar revisión."
+        },
+        "subtotal": {
+            "valor_pdf_normalizado": "168500.00",
+            "valor_xml_normalizado": "168500.00",
+            "valor_resuelto": "168500.00",
+            "fuente_elegida": "iguales",
+            "requiere_revision": false,
+            "razon_ia": "Ambas fuentes coinciden tras normalizar."
+        },
+        "impuestos": {
+            "valor_pdf_normalizado": "32015.00",
+            "valor_xml_normalizado": "32015.00",
+            "valor_resuelto": "32015.00",
+            "fuente_elegida": "iguales",
+            "requiere_revision": false,
+            "razon_ia": "Ambas fuentes coinciden tras normalizar."
+        },
+        "total": {
+            "valor_pdf_normalizado": null,
+            "valor_xml_normalizado": "200515.00",
+            "valor_resuelto": null,
+            "fuente_elegida": "pdf",
+            "requiere_revision": false,
+            "razon_ia": "Regla de prioridad: se elige PDF para el campo total."
+        }
+    },
+    "requiere_revision_global": false,
+    "error": null
+}
