@@ -9,6 +9,10 @@ Interfaz sencilla por consola para el proyecto CAFE.
 from pathlib import Path
 from config import CONFIG
 from .agente_supervisor import AgenteSupervisor
+from dotenv import load_dotenv
+from pathlib import Path
+
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 
 def seleccionar_carpeta_zips() -> Path:

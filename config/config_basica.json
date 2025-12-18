@@ -1,19 +1,28 @@
 {
-    "rutas": {
-        "data_raw": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\data\\raw",
-        "data_processed": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\data\\processed",
-        "data_logs": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\data\\logs",
-        "datos_adjuntos": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\datos_adjuntos"
-    },
-    "comparacion": {
-        "tolerancia_montos": 1.0,
-        "tolerancia_fechas_dias": 0
-    },
-    "prioridad_fuente": {
-        "montos": "xml",
-        "impuestos": "xml",
-        "total": "xml",
-        "nit": "xml",
-        "textos_libres": "pdf"
-    }
+  "rutas": {
+    "data_raw": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\data\\raw",
+    "data_processed": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\data\\processed",
+    "data_logs": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\data\\logs",
+    "datos_adjuntos": "C:\\Users\\Usuario\\Desktop\\Carpetas\\Uni\\Decimo Semestre\\Sistemas Inteligentes\\Segundo corte\\Proyecto\\datos_adjuntos"
+  },
+  "comparacion": {
+    "tolerancia_montos": 1.0,
+    "tolerancia_fechas_dias": 0
+  },
+  "prioridad_fuente": {
+    "montos": "xml",
+    "impuestos": "xml",
+    "total": "xml",
+    "nit": "xml",
+    "textos_libres": "pdf"
+  },
+
+  "ia": {
+    "enabled": true,
+    "model": "gpt-4o-mini"
+  },
+
+  "openai": {
+    "api_key": ""
+  }
 }

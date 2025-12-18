@@ -2,11 +2,15 @@ from pathlib import Path
 import json
 import zipfile
 import pandas as pd
+import os
 
 from .extractor_xml import parse_xml_invoice
 from .extractor_pdf import parse_pdf_invoice
 from .conciliacion import conciliar_factura
 from config import CONFIG
+
+# ✅ IA extractor (ya lo tienes creado)
+from .ia_extractor import extraer_campos_pdf_con_ia
 
 
 class AgenteSupervisor:
@@ -55,6 +59,9 @@ class AgenteSupervisor:
         self.ids_facturas_con_revision = []
         self.ids_facturas_error = []
 
+        # Detalle para saber QUÉ revisar por factura
+        self.detalle_revision = {}  # {id_factura: ["campo1", "campo2", ...]}
+
     # ==== Percepción ====
     def percibir_zips_pendientes(self):
         """
@@ -93,6 +100,7 @@ class AgenteSupervisor:
           - xml_raw
           - conciliacion
           - requiere_revision_global
+          - campos_a_revisar
           - error (None o string)
         """
         id_factura = pdf_path.stem
@@ -102,12 +110,68 @@ class AgenteSupervisor:
             fac_pdf = parse_pdf_invoice(pdf_path)
             fac_xml = parse_xml_invoice(xml_path)
 
-            # 2) Conciliar ambas fuentes campo por campo
+            # =========================================================
+            # ✅ 2) IA (solo si faltan campos clave en el PDF)
+            #    - NO pisa lo que ya tengas
+            #    - Usa XML como "hint" opcional
+            # =========================================================
+            ia_cfg = self.config.get("ia", {})
+            ia_enabled = ia_cfg.get("enabled", False)
+
+            # API key: primero intenta en CONFIG, si no, en variable de entorno
+            api_key = (
+                self.config.get("openai", {}).get("api_key")
+                or os.getenv("OPENAI_API_KEY", "")
+            )
+            model = ia_cfg.get("model", os.getenv("OPENAI_MODEL", "gpt-4o-mini"))
+
+            CAMPOS_CLAVE = ["cufe", "numero", "nit_emisor", "total"]
+
+            if ia_enabled and api_key:
+                faltantes = [c for c in CAMPOS_CLAVE if not fac_pdf.get(c)]
+                if faltantes:
+                    try:
+                        fac_pdf_ia = extraer_campos_pdf_con_ia(
+                            pdf_path=pdf_path,
+                            api_key=api_key,
+                            model=model,
+                            xml_hint=fac_xml,  # ayuda al modelo, sin obligarlo
+                        )
+
+                        # Rellenar SOLO vacíos
+                        for k, v in fac_pdf_ia.items():
+                            if k in ["nivel_confianza", "observaciones"]:
+                                continue
+                            if (fac_pdf.get(k) in [None, "", "N/A"]) and v not in [None, "", "N/A"]:
+                                fac_pdf[k] = v
+
+                        # Guarda metadatos IA (opcional, útil para la interfaz)
+                        fac_pdf["_ia"] = {
+                            "modelo": model,
+                            "nivel_confianza": fac_pdf_ia.get("nivel_confianza", None),
+                            "observaciones": fac_pdf_ia.get("observaciones", []),
+                            "campos_faltantes_detectados": faltantes,
+                        }
+
+                    except Exception as e_ia:
+                        # Si IA falla, NO dañamos el flujo
+                        fac_pdf["_ia"] = {
+                            "modelo": model,
+                            "error": f"IA fallo: {str(e_ia)}"
+                        }
+
+            # 3) Conciliar ambas fuentes campo por campo
             conciliacion, requiere_revision_global = conciliar_factura(
                 fac_pdf,
                 fac_xml,
                 self.config,
             )
+
+            # ✅ Campos específicos a revisar (para que el resumen NO sea solo número)
+            campos_a_revisar = [
+                campo for campo, det in (conciliacion or {}).items()
+                if isinstance(det, dict) and det.get("requiere_revision") is True
+            ]
 
             return {
                 "id_factura": id_factura,
@@ -115,6 +179,7 @@ class AgenteSupervisor:
                 "xml_raw": fac_xml,
                 "conciliacion": conciliacion,
                 "requiere_revision_global": requiere_revision_global,
+                "campos_a_revisar": campos_a_revisar,
                 "error": None,
             }
 
@@ -126,6 +191,7 @@ class AgenteSupervisor:
                 "xml_raw": None,
                 "conciliacion": None,
                 "requiere_revision_global": True,
+                "campos_a_revisar": [],
                 "error": str(e),
             }
 
@@ -148,6 +214,7 @@ class AgenteSupervisor:
             registros_resumen.append({
                 "id_factura": res["id_factura"],
                 "requiere_revision_global": res["requiere_revision_global"],
+                "campos_a_revisar": ";".join(res.get("campos_a_revisar", [])),
                 "error": res["error"],
             })
 
@@ -201,6 +268,7 @@ class AgenteSupervisor:
         self.ids_facturas_ok = []
         self.ids_facturas_con_revision = []
         self.ids_facturas_error = []
+        self.detalle_revision = {}
 
         for res in todos_los_resultados:
             id_factura = res.get("id_factura")
@@ -214,6 +282,7 @@ class AgenteSupervisor:
                 self.facturas_con_revision += 1
                 if id_factura:
                     self.ids_facturas_con_revision.append(id_factura)
+                    self.detalle_revision[id_factura] = res.get("campos_a_revisar", [])
 
             else:
                 self.facturas_ok += 1
@@ -227,6 +296,8 @@ class AgenteSupervisor:
             "ids_facturas_ok": self.ids_facturas_ok,
             "ids_facturas_con_revision": self.ids_facturas_con_revision,
             "ids_facturas_error": self.ids_facturas_error,
+            # ✅ ahora sí: nombres/ids + qué campos revisar
+            "detalle_revision": self.detalle_revision,
         }
 
         print("\n[AGENTE] Resumen global:", resumen)
